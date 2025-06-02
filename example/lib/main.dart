@@ -31,7 +31,17 @@ extension StringExt on String {
   Text get text => Text(this);
   Widget tab(int index) {
     return Tab(
-      text: "Tab $this",
+      // text: "Tab $this",
+      child: Row(
+        children: [
+          Text("Tab $this", style: const TextStyle(color: Colors.black),),
+          const Spacer(),
+          ReorderableDragStartListener(
+            index: index,
+            child: const Icon(Icons.drag_handle),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -42,8 +52,6 @@ class _ReorderableTabBarPageState extends State<ReorderableTabBarPage> {
   List<String> tabs = [
     "1",
     "2",
-    "3",
-    "4",
   ];
 
   bool isScrollable = false;
@@ -86,12 +94,14 @@ class _ReorderableTabBarPageState extends State<ReorderableTabBarPage> {
             ),
           ],
           bottom: ReorderableTabBar(
-            buildDefaultDragHandles: false,
             tabs: tabs.map((e) => e.tab(tabs.indexOf(e))).toList(),
             indicatorSize: tabSizeIsLabel ? TabBarIndicatorSize.label : null,
             isScrollable: isScrollable,
             reorderingTabBackgroundColor: Colors.black45,
-            indicatorWeight: 5,
+            indicatorWeight: 10,
+            buildDefaultDragHandles: false,
+            useDelayedDragStartListener: true,
+            isDisabledLongPress: true,
             tabBorderRadius: const BorderRadius.vertical(
               top: Radius.circular(8),
             ),

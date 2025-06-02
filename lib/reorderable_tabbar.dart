@@ -303,6 +303,7 @@ class ReorderableTabBar extends StatefulWidget implements PreferredSizeWidget {
     this.tabBackgroundColor,
     this.buildDefaultDragHandles = true,
     this.useDelayedDragStartListener = false,
+    this.isDisabledLongPress = false,
   })  : assert(indicator != null || (indicatorWeight > 0.0)),
         super(key: key);
 
@@ -311,6 +312,7 @@ class ReorderableTabBar extends StatefulWidget implements PreferredSizeWidget {
 
   /// uses the widget `ReorderableDelayedDragStartListener` if true and `ReorderableDragStartListener` if false
   final bool useDelayedDragStartListener;
+  final bool isDisabledLongPress;
 
   final BorderRadius? tabBorderRadius;
 
@@ -1019,19 +1021,23 @@ class _ReorderableTabBarState extends State<ReorderableTabBar> {
     for (var i = 0; i < wrappedTabs.length; i++) {
       Widget child = wrappedTabs[i];
 
-      if (!widget.buildDefaultDragHandles) {
-        if (widget.useDelayedDragStartListener) {
-          child = ReorderableDelayedDragStartListener(
-            index: i,
-            child: child,
-          );
-        } else {
-          child = ReorderableDragStartListener(
-            index: i,
-            child: child,
-          );
+
+      if (!widget.isDisabledLongPress) {
+        if (!widget.buildDefaultDragHandles) {
+          if (widget.useDelayedDragStartListener) {
+            child = ReorderableDelayedDragStartListener(
+              index: i,
+              child: child,
+            );
+          } else {
+            child = ReorderableDragStartListener(
+              index: i,
+              child: child,
+            );
+          }
         }
       }
+
 
       wrappedTabs[i] = SizedBox(
         key: _tabExtendKeys[i],
